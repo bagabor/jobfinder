@@ -46,8 +46,13 @@ public class PositionService {
         return client;
     }
 
-    public List<Position> getAllPositions() {
-        return positionRepository.findAll();
+    public List<Position> getAllPositions(PositionDto positionDto) {
+        if(positionDto.getName() == null){
+            positionDto.setName("");
+        } if(positionDto.getLocal() == null) {
+            positionDto.setLocal("");
+        }
+        return positionRepository.findByNameIgnoreCaseContainingOrLocalContaining(positionDto.getName(), positionDto.getLocal());
     }
 
     public Position getPositionById(Long id) {

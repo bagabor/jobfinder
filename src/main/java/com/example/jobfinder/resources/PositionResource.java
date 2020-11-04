@@ -33,12 +33,13 @@ public class PositionResource {
     @GetMapping(path = "/positions")
     public CollectionModel<EntityModel<PositionDto>> getAllPosition(@RequestBody @Valid PositionDto positionDto) {
         checkApiKey(positionDto);
-        List<EntityModel<PositionDto>> positions = positionService.getAllPositions().stream()
+        List<EntityModel<PositionDto>> positions = positionService.getAllPositions(positionDto).stream()
                 .map(positionAssembler::toModel)
                 .collect(toList());
         return CollectionModel.of(positions, linkTo(methodOn(PositionResource.class).getAllPosition(positionDto)).withSelfRel());
     }
 
+    //PositionDto is needed because of the apiKey.. it's not secure to pass it as a url param
     @GetMapping(path = "/positions/{id}")
     public EntityModel<PositionDto> getPosition(@PathVariable("id") Long id, @RequestBody @Valid PositionDto positionDto) {
         checkApiKey(positionDto);
