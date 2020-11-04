@@ -14,22 +14,22 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @Entity
-@Table(name = "CLIENT")
+@Table
 public class Client {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(name = "NAME")
+    @Column
     @Length
     private String name;
 
-    @Column(name = "EMAIL")
+    @Column
     @Email
     private String email;
 
-    @Column(name = "API_KEY")
+    @Column
     @Type(type = "uuid-char")
     private UUID apiKey;
 

@@ -8,3 +8,5 @@ create table CLIENT(
     API_KEY varchar(50),
     PRIMARY KEY(ID)
 );
+
+insert into CLIENT (NAME, EMAIL, API_KEY) values ('Oracle', 'oracle@oracle.com', 'a3b9431e-1e72-11eb-adc1-0242ac120002');
