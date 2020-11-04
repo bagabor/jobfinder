@@ -20,8 +20,13 @@ public class PositionResource {
 
     @PostMapping(path = "/positions")
     public String createPosition(@RequestBody @Valid PositionDto positionDto) {
-        positionService.savePosition(positionDto);
-        return "done";
+        Long positionId;
+        try{
+            positionId = positionService.savePosition(positionDto);
+        } catch (RuntimeException e){
+            return "Client is not registered for this api key!";
+        }
+        return positionId.toString();
     }
 
 }
