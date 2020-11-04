@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Slf4j
@@ -22,12 +23,7 @@ public class PositionService {
 
     @Transactional
     public Long savePosition(PositionDto positionDto) throws RuntimeException{
-        Client client = clientRepository.findByApiKey(positionDto.getApiKey());
-
-        if(client == null) {
-            log.error("Client is not registered for this api key!");
-            throw new RuntimeException("Client is not registered for this api key!");
-        }
+        Client client = getClient(positionDto);
 
         Position position = positionRepository.save(Position.builder()
                 .name(positionDto.getName())
@@ -41,7 +37,20 @@ public class PositionService {
         return position.getId();
     }
 
+    public Client getClient(PositionDto positionDto) throws RuntimeException{
+        Client client = clientRepository.findByApiKey(positionDto.getApiKey());
+        if(client == null) {
+            log.error("Client is not registered for this api key!");
+            throw new RuntimeException("Client is not registered for this api key!");
+        }
+        return client;
+    }
+
     public List<Position> getAllPositions() {
         return positionRepository.findAll();
+    }
+
+    public Position getPositionById(Long id) {
+        return positionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }
