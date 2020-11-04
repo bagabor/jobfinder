@@ -34,7 +34,7 @@ public class PositionResource {
 
     //PositionDto is needed because of the apiKey.. it's not secure to pass it as a url param
     @GetMapping(path = "/positions")
-    public ResponseEntity<List<PositionDto>> getAllPosition(@RequestBody @Valid PositionDto positionDto) {
+    public ResponseEntity getAllPosition(@RequestBody @Valid PositionDto positionDto) {
         try{
             List<Position> positions = positionService.getAllPositions(positionDto);
             positions.forEach(position -> position.setUrl(BASE_URL + "/" + position.getId()));
@@ -44,12 +44,13 @@ public class PositionResource {
             return ResponseEntity.status(HttpStatus.OK) //
                     .body(response);
         } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(e.getMessage());
         }
     }
 
     @GetMapping(path = "/positions/{id}")
-    public ResponseEntity<PositionDto> getPosition(@PathVariable("id") Long id, @RequestBody @Valid PositionDto positionDto) {
+    public ResponseEntity getPosition(@PathVariable("id") Long id, @RequestBody @Valid PositionDto positionDto) {
         try{
             Position position = positionService.getPositionById(id, positionDto);
             position.setUrl(BASE_URL + "/" + id);
@@ -57,23 +58,27 @@ public class PositionResource {
             return ResponseEntity.status(HttpStatus.OK) //
                     .body(response);
         }catch(Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
     }
 
     @PostMapping(path = "/positions")
-    public EntityModel<CreatePositionResponseDto> createPosition(@RequestBody @Valid PositionDto positionDto) {
-        Long positionId = null;
-        CreatePositionResponseDto createPositionResponseDto = CreatePositionResponseDto.builder().build();
-        try {
-            positionId = positionService.savePosition(positionDto);
-        } catch (RuntimeException e) {
-            createPositionResponseDto.setErrorMessage("Client is not registered for this api key!");
+    public ResponseEntity createPosition(@RequestBody @Valid PositionDto positionDto) {
+        try{
+            Long positionId = null;
+            CreatePositionResponseDto createPositionResponseDto = CreatePositionResponseDto.builder().build();
+            try {
+                positionId = positionService.savePosition(positionDto);
+            } catch (RuntimeException e) {
+                createPositionResponseDto.setErrorMessage("Client is not registered for this api key!");
+            }
+            createPositionResponseDto.setUrl(BASE_URL + "/" + positionId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createPositionResponseDto);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        createPositionResponseDto.setUrl(BASE_URL + "/" + positionId);
-        return EntityModel.of(createPositionResponseDto,
-                linkTo(methodOn(PositionResource.class).getPosition(positionId, positionDto)).withSelfRel());
+
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
