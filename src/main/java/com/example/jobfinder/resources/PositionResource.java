@@ -63,11 +63,7 @@ public class PositionResource {
         try {
             Long positionId = null;
             CreatePositionResponseDto createPositionResponseDto = CreatePositionResponseDto.builder().build();
-            try {
-                positionId = positionService.savePosition(positionDto);
-            } catch (RuntimeException e) {
-                createPositionResponseDto.setErrorMessage("Client is not registered for this api key!");
-            }
+            positionId = positionService.savePosition(positionDto);
             createPositionResponseDto.setUrl(BASE_URL + "/" + positionId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createPositionResponseDto);
         } catch (Exception e) {

@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @Builder
 public class CreatePositionResponseDto {
-    private String errorMessage;
     private String url;
 }
