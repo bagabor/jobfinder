@@ -11,8 +11,11 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 
+import java.util.List;
 import java.util.UUID;
 
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -38,6 +41,9 @@ public class Client {
     @Column
     @Type(type = "uuid-char")
     private UUID apiKey;
+
+    @OneToMany(mappedBy = "client", cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    private List<Position> positions;
 
     @PrePersist
     public void buildApiKey(){

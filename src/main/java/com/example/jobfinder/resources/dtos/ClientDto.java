@@ -11,8 +11,6 @@ import java.util.UUID;
 @Builder
 public class ClientDto {
 
-    private Long id;
-
     @Size(max = 100, message = "The name cannot be longer than 100 character!")
     private String name;
 
