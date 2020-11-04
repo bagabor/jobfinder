@@ -1,7 +1,10 @@
 package com.example.jobfinder.dao.models;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,8 +16,11 @@ import java.util.UUID;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
-@Entity
 @Table
+@Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
 
     @Id
@@ -22,7 +28,7 @@ public class Client {
     private Long id;
 
     @Column
-    @Length
+    @Length(max = 100)
     private String name;
 
     @Column
