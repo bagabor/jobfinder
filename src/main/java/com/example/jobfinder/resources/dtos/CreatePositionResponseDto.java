@@ -7,4 +7,5 @@ import lombok.Data;
 @Builder
 public class CreatePositionResponseDto {
     private String errorMessage;
+    private String url;
 }

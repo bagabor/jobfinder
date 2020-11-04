@@ -10,7 +10,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +45,7 @@ public class Client {
     private List<Position> positions;
 
     @PrePersist
-    public void buildApiKey(){
+    public void buildApiKey() {
         this.apiKey = UUID.randomUUID();
     }
 }

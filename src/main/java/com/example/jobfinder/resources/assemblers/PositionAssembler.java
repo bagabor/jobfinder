@@ -10,13 +10,22 @@ import org.springframework.stereotype.Component;
 public class PositionAssembler implements RepresentationModelAssembler<Position, EntityModel<PositionDto>> {
 
 
+    //not used beacuse of the ResponseEntity type
     @Override
     public EntityModel<PositionDto> toModel(Position position) {
         return EntityModel.of(PositionDto.builder()
                 .name(position.getName())
                 .local(position.getLocal())
-                .apiKey(position.getClient().getApiKey())
                 .url(position.getUrl())
                 .build());
+    }
+
+    public PositionDto buildPositionDto(Position position) {
+        PositionDto positionDto = PositionDto.builder()
+                .name(position.getName())
+                .local(position.getLocal())
+                .url(position.getUrl())
+                .build();
+        return positionDto;
     }
 }
