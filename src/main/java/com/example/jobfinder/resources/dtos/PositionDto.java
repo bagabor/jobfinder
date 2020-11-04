@@ -17,4 +17,6 @@ public class PositionDto {
     private String local;
 
     private UUID apiKey;
+
+    private String url;
 }

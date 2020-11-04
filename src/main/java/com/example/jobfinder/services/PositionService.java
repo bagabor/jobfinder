@@ -65,6 +65,7 @@ public class PositionService {
                 .map(e -> Position.builder()
                         .name(e.getTitle())
                         .local(e.getLocation())
+                        .url(e.getUrl())
                         .build()
                 ).collect(toList());
         return Stream.concat(positionsFromLocalDb.stream(), positionsFromClient.stream()).collect(toList());

@@ -25,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @AllArgsConstructor
 public class PositionResource {
 
+    private static final String BASE_URL = "http://localhost:8080/positions";
 
     private final PositionService positionService;
     private final PositionAssembler positionAssembler;
@@ -33,10 +34,12 @@ public class PositionResource {
     @GetMapping(path = "/positions")
     public CollectionModel<EntityModel<PositionDto>> getAllPosition(@RequestBody @Valid PositionDto positionDto) {
         checkApiKey(positionDto);
-        List<EntityModel<PositionDto>> positions = positionService.getAllPositions(positionDto).stream()
+        List<Position> positions = positionService.getAllPositions(positionDto);
+        positions.forEach(position -> position.setUrl(BASE_URL + "/" + position.getId()));
+        List<EntityModel<PositionDto>> response = positions.stream()
                 .map(positionAssembler::toModel)
                 .collect(toList());
-        return CollectionModel.of(positions, linkTo(methodOn(PositionResource.class).getAllPosition(positionDto)).withSelfRel());
+        return CollectionModel.of(response, linkTo(methodOn(PositionResource.class).getAllPosition(positionDto)).withSelfRel());
     }
 
     //PositionDto is needed because of the apiKey.. it's not secure to pass it as a url param
@@ -44,6 +47,7 @@ public class PositionResource {
     public EntityModel<PositionDto> getPosition(@PathVariable("id") Long id, @RequestBody @Valid PositionDto positionDto) {
         checkApiKey(positionDto);
         Position position = positionService.getPositionById(id);
+        position.setUrl(BASE_URL + "/" + id);
         return positionAssembler.toModel(position);
     }
 

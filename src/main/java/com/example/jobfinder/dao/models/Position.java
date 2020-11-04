@@ -36,4 +36,7 @@ public class Position {
     @JoinColumn(name = "client_id", nullable = false, referencedColumnName = "id")
     @JsonIgnore
     private Client client;
+
+    @Transient
+    private String url;
 }

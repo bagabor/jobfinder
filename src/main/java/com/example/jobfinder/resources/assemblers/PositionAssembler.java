@@ -16,6 +16,7 @@ public class PositionAssembler implements RepresentationModelAssembler<Position,
                 .name(position.getName())
                 .local(position.getLocal())
                 .apiKey(position.getClient().getApiKey())
+                .url(position.getUrl())
                 .build());
     }
 }
