@@ -1,14 +1,11 @@
 package com.example.jobfinder.resources;
 
-import com.example.jobfinder.dao.models.Client;
 import com.example.jobfinder.dao.models.Position;
 import com.example.jobfinder.resources.assemblers.PositionAssembler;
 import com.example.jobfinder.resources.dtos.CreatePositionResponseDto;
 import com.example.jobfinder.resources.dtos.PositionDto;
 import com.example.jobfinder.services.PositionService;
 import lombok.AllArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.ObjectError;
@@ -20,8 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @AllArgsConstructor
@@ -35,7 +30,7 @@ public class PositionResource {
     //PositionDto is needed because of the apiKey.. it's not secure to pass it as a url param
     @GetMapping(path = "/positions")
     public ResponseEntity getAllPosition(@RequestBody @Valid PositionDto positionDto) {
-        try{
+        try {
             List<Position> positions = positionService.getAllPositions(positionDto);
             positions.forEach(position -> position.setUrl(BASE_URL + "/" + position.getId()));
             List<PositionDto> response = positions.stream()
@@ -43,7 +38,7 @@ public class PositionResource {
                     .collect(toList());
             return ResponseEntity.status(HttpStatus.OK) //
                     .body(response);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(e.getMessage());
         }
@@ -51,13 +46,13 @@ public class PositionResource {
 
     @GetMapping(path = "/positions/{id}")
     public ResponseEntity getPosition(@PathVariable("id") Long id, @RequestBody @Valid PositionDto positionDto) {
-        try{
+        try {
             Position position = positionService.getPositionById(id, positionDto);
             position.setUrl(BASE_URL + "/" + id);
             PositionDto response = positionAssembler.buildPositionDto(position);
             return ResponseEntity.status(HttpStatus.OK) //
                     .body(response);
-        }catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
@@ -65,7 +60,7 @@ public class PositionResource {
 
     @PostMapping(path = "/positions")
     public ResponseEntity createPosition(@RequestBody @Valid PositionDto positionDto) {
-        try{
+        try {
             Long positionId = null;
             CreatePositionResponseDto createPositionResponseDto = CreatePositionResponseDto.builder().build();
             try {
@@ -75,7 +70,7 @@ public class PositionResource {
             }
             createPositionResponseDto.setUrl(BASE_URL + "/" + positionId);
             return ResponseEntity.status(HttpStatus.CREATED).body(createPositionResponseDto);
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
