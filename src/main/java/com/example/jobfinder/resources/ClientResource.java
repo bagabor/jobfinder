@@ -12,6 +12,8 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 @RestController
 @AllArgsConstructor
 public class ClientResource {
@@ -35,6 +37,6 @@ public class ClientResource {
         return ex.getBindingResult()
                 .getAllErrors().stream()
                 .map(ObjectError::getDefaultMessage)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 }
